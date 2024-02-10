@@ -1,53 +1,46 @@
+function cambridge_dictionary_catcher (page_link){
 
-const puppeteer = require('puppeteer');
-var the_links = [];
-var counter = 0;
-var max =10;
-
-
-
-async function run (page_link) {
-
-  if(counter <= max){
-    //console.log(items[index]);
-      //  index++;
-        //await sleep(seconds);
-        //run(index);
+   // string to intger
+  var string_toInt = parseInt(page_link);
 
 
 
+  // modulo such that whatever string value you get, you can aquire some value between 0 and 25
+  // find the letter as it corresponds with that number in the alphabet.
+  //whatever letters remain in the rest of the alphabet, get those other letter and declare them
+  // as keys for objects in the grand object, of 2d arrays
 
-  console.log(counter);
+  // create random strings of varying lengths all with the same letter given whatever letter
+  //42
+  //we are currently on, then add those random strings as keys where 2d arrays
+  //are their values
+  // in the 00 place of the 2d array, place length of word
+  //in the 01 place of the 2d array, place value of word
 
 
-    const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
-    //console.log(await browser.version());
-    const page = await browser.newPage();
-    await page.goto(page_link);
-   //   await page.screenshot({path: 'antiwar.png', fullPage: true});
-   const html = await page.content();
-    // const title = await page.evaluate(()=> document.title );
-    // console.log(title);
-    //const text = await page.evaluate(() => document.body.innerText);
-    const links = await page.evaluate(() => Array.from(document.querySelectorAll('a'), (e) => e.href));
-    for( x in links)
-    {
 
-        // console.log(links[x])
-        // console.log(the_links)
-        the_links= the_links.concat(links[x]);
-        //console.log(the_links)
-        counter ++;
-        run(links[x]);
-
-    }
-  await browser.close();
+  // grand object = link_enumerator(grandobjec)
 
 }
+
+function link_enumerator(maelstrom){
+
+  //10 do lorem ipsum the length of 100 characters multiplied by the sum of
+  //00 and 01
+  //11 do the same thing but 100 multiplied by the difference, normalize if negative
+
+
+
+
+
+  maelstrom
+
 }
 
+function obsidian_printer(){
 
+  //print maelstrom content to a md file
 
-run('https://antiwar.com');
+}
 
-console.log(the_links);
+cambridge_dictionary_catcher('42')
