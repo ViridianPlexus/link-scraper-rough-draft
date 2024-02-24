@@ -3,195 +3,30 @@ let the_links = [];
 let counter = 0;
 let max =10;
 let letter_links = [];
+
 async function run (page_link)
 {
-  //UI note
-  console.log("Running 'run' function: ")
-  //grand object holds 26 letter objects which will act as index style folders for all words beginning with that letter
-
-  //variables:
-  let grand_object = {}
-  i= 0;
-  /*
-  //change to real check beacon.
-  //sort through links for
-  //  this extension
-  //https://dictionary.cambridge.org/us/browse/english/
-  //for each //new section area // make that an object within the object
-  // slice off the url up until a point
-  // make all left over slices the titles of objects in the grand objects
-  // within each
-  //
-
-  */
-  {
   const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
-  //console.log(await browser.version());
-  const page = await browser.newPage();
-  await page.goto(page_link);
-  //await page.screenshot({path: 'antiwar.png', fullPage: true});
-  const html = await page.content();
-  // const title = await page.evaluate(()=> document.title );
-  // console.log(title);
-  //const text = await page.evaluate(() => document.body.innerText);
-  const links = await page.evaluate(() => Array.from(document.querySelectorAll('a'), (e) => e.href));
-  // either judge the size of the sheet being filled up and/or wait for  an execution to be done
-  }
 
-  for( x in links)
-  {
-    // console.log(links[x])
-    // console.log(the_links)
-    the_links= the_links.concat(links[x]);
-    //run(links[x]);
-  }
-
-  for( x in links)
-  {
-    if(links[x].includes('https://dictionary.cambridge.org/us/browse/english/')){
-      letter_links[i]= links[x];
-      i++;
-    }
-  }
-  //https://dictionary.cambridge.org/us/browse/english/
-  //the_links.includes('at');
-  //console.log(the_links)
-  //console.log(letter_links);
-    function removeDuplicates(data) {
-      return data.filter((value, index) => data.indexOf(value) === index);
-  }
-  letter_links = removeDuplicates(letter_links);
- // console.log(letter_links);
-  for( x in letter_links)
-    {
-      var holder_array;
-      holder_array=letter_links[x].split('https://dictionary.cambridge.org/us/browse/english/');
-      if(holder_array[0]===holder_array[1]){
-        delete letter_links[x];
-    }
-    // if(links[x]){
-    //   letter_links[i]= links[x];
-    //   i++;
-    // }
-    }
-   // console.log(letter_links);
-    for(let r =0; r<letter_links.length; r++){
-      if(letter_links[r]!=undefined)
-    {  var holder_array;
-      holder_array=letter_links[r].split('https://dictionary.cambridge.org/us/browse/english/');
-      grand_object[holder_array[1]] = {};
-
-    }
-    }
-    keys = Object.keys(grand_object);
-    for(let r =0; r<letter_links.length; r++){
-    //  console.log("this is a letter link: " + letter_links[r])
-    }
-  for(x in keys)
-    {
-      ////console.log(grand_object[keys[x]])
-      grand_object[keys[x]] = await  object_stuffer(keys[x], grand_object[keys[x]],letter_links[x])
-    }
-    // keys = Object.keys(grand_object);
-    // console.log(keys)
-    // for( x in grand_object){
-    //   grand_object[x]
-    // let rows = grand_object[x].length
-    // let columns= 6
-    // }
-    // grand_object_aftr_enumeration = link_enumerator(grand_object);
-    await browser.close();
+  function removeDuplicates(data) {
+    return data.filter((value, index) => data.indexOf(value) === index);
 }
-async function the_words_on_the_screen(loaded_array)
-{
-  column_height = 9; // definition, etymology, synonyms, antonyms, parts of speech, example scentence 0->3
-  console.log("we are now into sub array fixing ////////////////")
-  console.log(loaded_array[0][1])
-  //take first link and get all other links found on that page, as other members of the first array
-  let  page_url= loaded_array[0][1];
-  const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
-  //console.log(await browser.version());
-  let page = await browser.newPage();
-  await page.goto(page_url);
- //   await page.screenshot({path: 'antiwar.png', fullPage: true});
-  let html = await page.content();
-  console.log(html)
-  console.log('\n'+page_url)
-  // const title = await page.evaluate(()=> document.title );
-  // console.log(title);
-  //const text = await page.evaluate(() => document.body.innerText);
-  let elements = await page.$$('div.hlh32.han a.tc-bd'); // Select the <a> elements directly
-  let new_loaded_array =[ elements.length];
-  for (let y = 0; y < column_height; y++) {
-    new_loaded_array[x][y] = elements[x]; // You can initialize with any value you want
-  }
-  dictionary_fetcher()
-  etymology_fetcher()
-  synonyms_fetcher()
-  antonyms_fetcher()
-  for (let x = 0; x < elements.length; y++) {
-    new_loaded_array[x][0] = null; // You can initialize with any value you want
-  }
- // console.log("Number of elements found: " + elements.length);
- // loaded_array[0]= elements.length;
-  console.log(new_loaded_array)
-  console.log("length of loaded array: " + loaded_array.length);
-  // Extract href attribute from each element
-  for (let element of elements) {
-      const href = await page.evaluate(el => el.getAttribute('href'), element);
-      console.log("Href attribute of element: " + href);
-  }
-  console.log("we are now into sub array fixing ////////////////")
-  /**
-   *
-   *   // for(x in elements){
-    //elements[x] = href[x]
-    //   console.log("x in elements:"+ elements[x])
-    // }
-    // for (const element of elements) {
-    //   // Extract the href attribute from each element
-    //   const href = await page.evaluate(el => el.getAttribute('href'), element);
-    //   // Push the href attribute into the new_links array
-    //   new_links.push(href);
-    // move these things around, organize, get the words, get their definitions
-    //load the information back up into the arrays and send them back
-   */
-  for(let x= 0 ; x< elements.length; x++){
-    loaded_array[x][1]=elements[x]
-  }
 
-  for(let x= 0 ; x< elements.length; x++){
-    loaded_array[x][1]=elements[x]
-  }
-  console.log("houston, do we have lift off?")
-  for(let x= 0 ; x< elements.length; x++){
-    //console.log(await browser.version());
-    let page = await browser.newPage();
-    await page.goto(loaded_array[x][1]);
-    //await page.screenshot({path: 'antiwar.png', fullPage: true});
-   const html = await page.content();
-    //const title = await page.evaluate(()=> document.title );
-    //console.log(title);
-    //const text = await page.evaluate(() => document.body.innerText);
-    let element = await page.$('def.ddef_d.db');
-    //
-    console.log("houston, do we have lift off?")
-    console.log(element)
-  }
-}
 async function object_stuffer(letter, object, link){
+  console.log("Running 'object_stuffer' function... ")
+
+  console.log("Running 'object_stuffer' function.. ")
+
+  console.log("Running 'object_stuffer' function. ")
+
+  console.log("\n")
+
   let new_links = [];
-  const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
-  //console.log(await browser.version());
   const page = await browser.newPage();
   await page.goto(link);
-  //await page.screenshot({path: 'antiwar.png', fullPage: true});
   const html = await page.content();
-  // const title = await page.evaluate(()=> document.title );
-  // console.log(title);
-  //const text = await page.evaluate(() => document.body.innerText);
+
   let elements = await page.$$('.hlh32.hdb.dil.tcbd');
-  //console.log(elements)
   for (const element of elements)
     {
       // Extract the href attribute from each element
@@ -199,10 +34,7 @@ async function object_stuffer(letter, object, link){
       // Push the href attribute into the new_links array
       new_links.push(href);
     }
-  for(x in new_links)
-    {
-      //console.log("newlink: " + new_links[x] )
-    }
+
   //put each word found in each link in an array
   //find definition, etymology, etc of word from internet
   //place that information in other places in array
@@ -221,19 +53,298 @@ async function object_stuffer(letter, object, link){
       loaded_array[x][0]=new_links[x].split('https://dictionary.cambridge.org/us/browse/english/')[1]
       loaded_array[x][1]=new_links[x]
     }
-  for(let x=0; x< rows; x++){
-  console.log(loaded_array[x][0] + "\n");
-  console.log(loaded_array[x][1] );
-  }
+
   // take first link and get all other links found on that page, as other members of the
   //first array
+  console.log("calling 'the_words_on_the_screen' function... ")
+
+  console.log("\n")
+
+
+
   new_loaded_array = await the_words_on_the_screen(loaded_array)
   //send to another function that goes to that link, gets the word
   // gets the definition
   //gets the etymology from another website
   //later look for synonyms and ayntonyms
   // return new_loaded_array
-  return
+  return new_loaded_array;
 }
+
+async function the_words_on_the_screen(loaded_array)
+{
+  console.log("Running 'the_words_on_the_screen' function... ")
+
+  console.log("Running 'the_words_on_the_screen' function.. ")
+
+  console.log("Running 'the_words_on_the_screen' function. ")
+
+  console.log("\n")
+  column_height = 9; // definition, etymology, synonyms, antonyms, parts of speech, example scentence 0->3
+  //take first link and get all other links found on that page, as other members of the first array
+  let  page_url= loaded_array[0][1];
+
+  //console.log(await browser.version());
+  let page = await browser.newPage();
+  await page.goto(page_url);
+
+ //   await page.screenshot({path: 'antiwar.png', fullPage: true});
+  let html = await page.content();
+ // console.log(html)
+  const title = await page.evaluate(()=> document.title );
+  const text = await page.evaluate(() => document.body.innerText);
+  let elements = await page.$$('div.hlh32.han a.tc-bd'); // Select the <a> elements directly
+
+
+
+  let new_loaded_array =[ elements.length];
+
+  for (let x = 0; x < elements.length; x++)
+    {
+      new_loaded_array[x] = []; // Initialize each row as an empty array
+    }
+
+    let p = 0;
+    for (let element of elements) {
+
+      const href = await page.evaluate(el => el.getAttribute('href'), element);
+      new_loaded_array[p] = 'https://dictionary.cambridge.org' + href;
+
+      p++;
+
+  }
+
+
+
+  for(let i= 0; i< new_loaded_array.length; i++ )
+{ new_loaded_array[i][1]=  await dictionary_fetcher(new_loaded_array[i])
+ new_loaded_array[i][2] = await  etymology_fetcher(new_loaded_array[i])
+}
+
+return new_loaded_array
+
+}
+
+async function dictionary_fetcher(link_for_dict)
+{
+  console.log("link for dict.: " + link_for_dict)
+
+const page = await browser.newPage();
+await page.goto(link_for_dict);
+//await page.screenshot({path: 'antiwar.png', fullPage: true});
+const html = await page.content();
+// const title = await page.evaluate(()=> document.title );
+// console.log(title);
+//const text = await page.evaluate(() => document.body.innerText);
+
+const textContents = await page.evaluate(() => {
+  const elements = Array.from(document.querySelectorAll('.def.ddef_d.db')); // Select elements with class 'def ddef_d db'
+  return elements.map(element => element.innerText); // Extract innerText from each element
+});
+
+console.log(textContents);
+
+//console.log("this will work: " + allText);
+
+return textContents;
+
+}
+
+async function etymology_fetcher(link_for_ety)
+ {
+  const hasNumbers = (str) => {
+    return /\d/.test(str);
+  };
+
+  console.log(typeof link_for_ety )
+  console.log( link_for_ety )
+
+
+
+// Remove the substring
+let modifiedLinkForEty = link_for_ety.replace('https://dictionary.cambridge.org/us/dictionary/english/', '');
+
+
+
+
+if((!hasNumbers(modifiedLinkForEty) )&& !(modifiedLinkForEty.includes('-')) ){
+  console.log("ety catch successful");
+
+  const page = await browser.newPage();
+
+  await page.goto('https://www.etymonline.com/search?q='+modifiedLinkForEty);
+  console.log('https://www.etymonline.com/search?q='+modifiedLinkForEty);
+
+  const html = await page.content();
+
+const title = await page.evaluate(()=> document.title );
+console.log(title);
+const text = await page.evaluate(() => document.body.innerText);
+
+console.log(text); // Output: 0800 number
+
+// const targetText = await page.evaluate(() => {
+//   // Select the element containing the text "0800 number"
+//   const element = document.querySelector('.di-title .hw.dhw');
+
+//   // Return the inner text of the selected element
+//   return element.innerText.trim();
+}
+else{
+
+  console.log("ety catch miss");
+
+
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //UI note
+  console.log("Running 'run' function... ")
+
+  console.log("Running 'run' function.. ")
+
+  console.log("Running 'run' function. ")
+
+  console.log("\n")
+
+  //grand object holds 26 letter objects which will act as index style folders for all words beginning with that letter
+  //variables:
+  let grand_object = {}
+  i= 0;
+  const page = await browser.newPage();
+  await page.goto(page_link);
+  const html = await page.content();
+  const links = await page.evaluate(() => Array.from(document.querySelectorAll('a'), (e) => e.href));
+  for( let x in links)
+  {
+    the_links= the_links.concat(links[x]);
+  }
+  for(let x in links)
+  {
+    //many links found on page, here we grab only the ones that link to letter subsections
+    if(links[x].includes('https://dictionary.cambridge.org/us/browse/english/')){
+      letter_links[i]= links[x];
+      i++;
+    }
+  }
+
+
+  letter_links = removeDuplicates(letter_links);
+
+  for( x in letter_links)
+    {
+      var holder_array;
+      holder_array=letter_links[x].split('https://dictionary.cambridge.org/us/browse/english/');
+      https://dictionary.cambridge.org/us/dictionary/english/
+      if(holder_array[0]===holder_array[1])
+      {
+        delete letter_links[x];
+        //this is done to get rid of a artifact dont worry, or please understand and fix
+      }
+
+    }
+
+    for(let r =0; r<letter_links.length; r++){
+      if(letter_links[r]!=undefined)
+    {  var holder_array;
+      holder_array=letter_links[r].split('https://dictionary.cambridge.org/us/browse/english/');
+      grand_object[holder_array[1]] = {};
+
+    }
+    }
+    keys = Object.keys(grand_object);
+    for(let r =0; r<letter_links.length; r++){
+    //  console.log("this is a letter link: " + letter_links[r])
+    }
+
+    console.log("Running 'run' function... ")
+
+    console.log("Running 'run' function.. ")
+
+    console.log("Running 'run' function. ")
+
+    console.log("\n")
+
+  for(x in keys)
+    {
+      console.log("calling object stuffer...")
+
+      console.log("\n")
+
+      ////console.log(grand_object[keys[x]])
+      grand_object[keys[x]] = await  object_stuffer(keys[x], grand_object[keys[x]],letter_links[x])
+    }
+
+    await browser.close();
+
+    console.log("made it to printing")
+
+    const fs = require('fs');
+
+// Assuming grand_object is defined and contains your data
+
+// Define the file path
+const filePath = 'output.txt';
+
+// Open the file for writing
+const stream = fs.createWriteStream('C:\\Users\\Viridian\\Downloads\\outputty');
+
+// Loop through each object in grand_object
+for (let key in grand_object) {
+    if (grand_object.hasOwnProperty(key)) {
+        const array2D = grand_object[key]; // Access the 2D array
+
+        // Write a label for the current object
+        stream.write(`${key}:\n`);
+
+        // Loop through each row of the 2D array
+        array2D.forEach(row => {
+            // Write the contents of the row to the file
+            stream.write(row.join('\t') + '\n');
+        });
+
+        // Write a newline character to separate objects
+        stream.write('\n');
+    }
+}
+
+// Close the file stream
+stream.end();
+
+console.log('Contents of grand_object have been written to', filePath);
+
+}
+
+
+
+
+
+
+
+
+// synonyms_fetcher(link_for_syns)
+// {console.log("link for dict.: " + link_for_syns)}
+
+// antonyms_fetcher(link_for_ants)
+// {console.log("link for dict.: " + link_for_ants)}
+
+
+
+
 run('https://dictionary.cambridge.org/us/browse/english/');
 console.log(the_links);
