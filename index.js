@@ -7,7 +7,9 @@ let letter_links = [];
 let grand_object = {}
 
 
+
 async function run (page_link){
+
   let success = false;
   while (!success) {
       try {
@@ -18,6 +20,8 @@ async function run (page_link){
   }
 
   async function object_stuffer(letter, object, link){
+    let maxRetries= 64;
+
     console.log("Running 'object_stuffer' function... ")
 
     console.log("Running 'object_stuffer' function.. ")
@@ -27,8 +31,28 @@ async function run (page_link){
     console.log("\n")
 
     let new_links = [];
+
+let retries = 0;
+let pageLoaded = false;
+const retryDelay = 3000; // 3 seconds delay between retries
+
+while (!pageLoaded && retries < maxRetries) {
+    try {
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(180000);
     await page.goto(link);
+    pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+  } catch (error) {
+    console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+    retries++;
+    await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+}
+}
+if (!pageLoaded) {
+console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+// Handle the error appropriately, such as logging or throwing an error
+return; // or throw error;
+}
     const html = await page.content();
 
     let elements = await page.$$('.hlh32.hdb.dil.tcbd');
@@ -78,6 +102,7 @@ async function run (page_link){
 
   async function the_words_on_the_screen(loaded_array)
   {
+    let maxRetries= 64;
     console.log("Running 'the_words_on_the_screen' function... ")
 
     console.log("Running 'the_words_on_the_screen' function.. ")
@@ -91,7 +116,30 @@ async function run (page_link){
 
     //console.log(await browser.version());
     let page = await browser.newPage();
-    await page.goto(page_url);
+    await page.setDefaultNavigationTimeout(180000);
+
+    // let maxRetries = 64;
+    let retries = 0;
+    let pageLoaded = false;
+    const retryDelay = 3000; // 3 seconds delay, adjust as needed
+
+  while (!pageLoaded && retries < maxRetries) {
+    try {
+        await page.goto(page_url);
+        pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+    } catch (error) {
+        console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+        retries++;
+        await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+    }
+}
+
+if (!pageLoaded) {
+    console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+    // Handle the error appropriately, such as logging or throwing an error
+    return; // or throw error;
+}
+
 
   //   await page.screenshot({path: 'antiwar.png', fullPage: true});
     let html = await page.content();
@@ -146,7 +194,34 @@ async function run (page_link){
     console.log("link for dict.: " + link_for_dict)
 
   const page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(180000);
+
+  let maxRetries= 64;
+  let retries = 0;
+  let pageLoaded = false;
+  const retryDelay = 3000; // 3 seconds delay between retries
+
+  while (!pageLoaded && retries < maxRetries) {
+      try {
+
+
   await page.goto(link_for_dict);
+  pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+
+} catch (error) {
+  console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+  retries++;
+  await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+}
+}
+
+if (!pageLoaded) {
+console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+// Handle the error appropriately, such as logging or throwing an error
+return; // or throw error;
+}
+
+
   //await page.screenshot({path: 'antiwar.png', fullPage: true});
   const html = await page.content();
   // const title = await page.evaluate(()=> document.title );
@@ -168,6 +243,8 @@ async function run (page_link){
 
   async function etymology_fetcher(link_for_ety)
   {
+    let maxRetries = 64;
+
     const hasNumbers = (str) => {
       return /\d/.test(str);
     };
@@ -189,9 +266,31 @@ async function run (page_link){
     console.log("ety catch successful");
 
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(180000);
 
 
-    await page.goto('https://www.etymonline.com/search?q='+modifiedLinkForEty);
+
+let retries = 0;
+let pageLoaded = false;
+const retryDelay = 3000; // 3 seconds delay between retries
+
+while (!pageLoaded && retries < maxRetries) {
+    try {
+        await page.goto('https://www.etymonline.com/search?q=' + modifiedLinkForEty);
+        pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+    } catch (error) {
+        console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+        retries++;
+        await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+    }
+}
+
+if (!pageLoaded) {
+    console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+    // Handle the error appropriately, such as logging or throwing an error
+    return; // or throw error;
+}
+
     // Use Puppeteer to select the specific element with the class name `word__name--TTbAA`
     const element = await page.$('.word__name--TTbAA');
 
@@ -244,7 +343,9 @@ async function run (page_link){
 
   }
 
-  async function retryFunction(func, args, maxRetries = 3, delay = 1000) {
+  async function retryFunction(func, args, maxRetries = 64, delay = 1000) {
+
+
     for (let i = 0; i < maxRetries; i++) {
         try {
             const result = await func(args);
@@ -253,6 +354,7 @@ async function run (page_link){
         } catch (error) {
             console.error(`Attempt ${i + 1} failed:`, error);
             await new Promise(resolve => setTimeout(resolve, delay)); // Wait for a delay before retrying
+            //promises can fail, try to catch this one, see if its throwing an error.
         }
     }
     throw new Error(`Function failed after ${maxRetries} attempts`);
@@ -272,7 +374,31 @@ async function run (page_link){
 
   i= 0;
   const page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(180000);
+
+let retries = 0;
+let pageLoaded = false;
+const retryDelay = 3000; // 3 seconds delay between retries
+let maxRetries = 64;
+while (!pageLoaded && retries < maxRetries) {
+    try {
   await page.goto(page_link);
+  pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+} catch (error) {
+  console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+  retries++;
+  await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+}
+}
+
+if (!pageLoaded) {
+console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+// Handle the error appropriately, such as logging or throwing an error
+return; // or throw error;
+}
+
+
+
   const html = await page.content();
   const links = await page.evaluate(() => Array.from(document.querySelectorAll('a'), (e) => e.href));
 
