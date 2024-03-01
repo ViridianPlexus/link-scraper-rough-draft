@@ -11,7 +11,7 @@ async function run (page_link){
   let success = false;
   while (!success) {
       try {
-    const browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
+    let browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
 
     function removeDuplicates(data) {
       return data.filter((value, index) => data.indexOf(value) === index);
@@ -27,8 +27,45 @@ async function run (page_link){
     console.log("\n")
 
     let new_links = [];
-    const page = await browser.newPage();
+    let page = await browser.newPage();
+
+    let maxRetries = 64;
+  let retries = 0;
+  let pageLoaded = false;
+  let retryDelay = 3000; // 3 seconds delay between retries
+
+  while (!pageLoaded && retries < maxRetries) {
+
+    try {
+
+      if (retries === 15){
+
+        page = await browser.newPage();
+
+      }
+
+      if (retries === 35){
+        await browser.close();
+        browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
+        page = await browser.newPage();
+
+      }
     await page.goto(link);
+    pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+  } catch (error) {
+      console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+      retries++;
+      await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+  }
+}
+
+if (!pageLoaded) {
+  console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+  // Handle the error appropriately, such as logging or throwing an error
+  return; // or throw error;
+}
+
+
     const html = await page.content();
 
     let elements = await page.$$('.hlh32.hdb.dil.tcbd');
@@ -91,7 +128,39 @@ async function run (page_link){
 
     //console.log(await browser.version());
     let page = await browser.newPage();
+    const maxRetries = 64;
+let retries = 0;
+let pageLoaded = false;
+const retryDelay = 3000; // 3 seconds delay between retries
+
+while (!pageLoaded && retries < maxRetries) {
+    try {
+      if (retries === 15){
+
+        page = await browser.newPage();
+
+      }
+      if (retries === 35){
+        await browser.close();
+        browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
+        page = await browser.newPage();
+
+      }
+
     await page.goto(page_url);
+    pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+  } catch (error) {
+    console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+    retries++;
+    await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+}
+}
+
+if (!pageLoaded) {
+console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+// Handle the error appropriately, such as logging or throwing an error
+return; // or throw error;
+}
 
   //   await page.screenshot({path: 'antiwar.png', fullPage: true});
     let html = await page.content();
@@ -146,7 +215,43 @@ async function run (page_link){
     console.log("link for dict.: " + link_for_dict)
 
   const page = await browser.newPage();
+
+  const maxRetries = 64;
+ let retries = 0;
+ let pageLoaded = false;
+ const retryDelay  = 3000;
+
+while (!pageLoaded && retries < maxRetries) {
+    try {
+
+      if (retries === 15){
+
+        page = await browser.newPage();
+
+      }
+      if (retries === 35){
+        await browser.close();
+        browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
+        page = await browser.newPage();
+
+      }
+
   await page.goto(link_for_dict);
+
+  pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+} catch (error) {
+    console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+    retries++;
+    await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+}
+}
+
+if (!pageLoaded) {
+console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+// Handle the error appropriately, such as logging or throwing an error
+return; // or throw error;
+}
+
   //await page.screenshot({path: 'antiwar.png', fullPage: true});
   const html = await page.content();
   // const title = await page.evaluate(()=> document.title );
@@ -191,7 +296,39 @@ async function run (page_link){
     const page = await browser.newPage();
 
 
+    const maxRetries = 64;
+    let retries = 0;
+    let pageLoaded = false;
+    const retryDelay = 3000; // 3 seconds delay between retries
+
+    while (!pageLoaded && retries < maxRetries) {
+        try {
+
+          if (retries === 15){
+
+            page = await browser.newPage();
+
+          }
+          if (retries === 35){
+            await browser.close();
+            browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
+            page = await browser.newPage();
+
+          }
     await page.goto('https://www.etymonline.com/search?q='+modifiedLinkForEty);
+    pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+    } catch (error) {
+        console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+        retries++;
+        await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+    }
+}
+
+if (!pageLoaded) {
+    console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+    // Handle the error appropriately, such as logging or throwing an error
+    return; // or throw error;
+}
     // Use Puppeteer to select the specific element with the class name `word__name--TTbAA`
     const element = await page.$('.word__name--TTbAA');
 
@@ -244,7 +381,7 @@ async function run (page_link){
 
   }
 
-  async function retryFunction(func, args, maxRetries = 3, delay = 1000) {
+  async function retryFunction(func, args, maxRetries = 64, delay = 180000) {
     for (let i = 0; i < maxRetries; i++) {
         try {
             const result = await func(args);
@@ -272,7 +409,43 @@ async function run (page_link){
 
   i= 0;
   const page = await browser.newPage();
+  const maxRetries = 64;
+  let retries = 0;
+  let pageLoaded = false;
+  const retryDelay = 3000; // 3 seconds delay between retries
+//a page go to filtered
+
+  while (!pageLoaded && retries < maxRetries) {
+    try {
+
+      if (retries === 15){
+        page = await browser.newPage();
+
+      }
+      if (retries === 35){
+        await browser.close();
+        browser = await puppeteer.launch({executablePath: '/usr/bin/chromium-browser'});
+        page = await browser.newPage();
+
+      }
+
   await page.goto(page_link);
+  pageLoaded = true; // If page.goto() succeeds, set pageLoaded to true to exit the loop
+} catch (error) {
+  console.error(`Error during page navigation (Retry ${retries + 1}/${maxRetries}):`, error);
+  retries++;
+  await new Promise(resolve => setTimeout(resolve, retryDelay)); // Pause for retryDelay milliseconds
+}
+  }
+
+if (!pageLoaded) {
+  console.error(`Failed to navigate to the page after ${maxRetries} retries.`);
+  // Handle the error appropriately, such as logging or throwing an error
+  return; // or throw error;
+}
+
+
+
   const html = await page.content();
   const links = await page.evaluate(() => Array.from(document.querySelectorAll('a'), (e) => e.href));
 
